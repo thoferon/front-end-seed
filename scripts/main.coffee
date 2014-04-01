@@ -12,4 +12,6 @@ require.config
         angularroute:
             deps:  ["angular"]
 
-    deps: ["bootstrap"]
+    callback:
+        require ["angular", "lib/domReady!", "app"], (angular) ->
+            angular.bootstrap document, ["app"]

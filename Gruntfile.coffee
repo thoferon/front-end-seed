@@ -40,6 +40,14 @@ module.exports = (grunt) ->
                     ]
                 dest: "dist/css/lib/"
 
+        requirejs:
+            minify:
+                options:
+                    baseUrl: "dist/"
+                    optimizeCss: "standard"
+                    appDir: ""
+                    dir: "dist-minified"
+
         compress:
             package:
                 options:
@@ -53,7 +61,7 @@ module.exports = (grunt) ->
                         dest: versioned_name
                     }, {
                         expand: true
-                        cwd: "dist"
+                        cwd: "dist-minified"
                         src: ["**/*"]
                         dest: versioned_name
                     }
@@ -74,12 +82,16 @@ module.exports = (grunt) ->
             unit_loop:
                 configFile: "karma.conf.coffee"
 
+        clean: ["dist", "dist-minified"]
+
     grunt.loadNpmTasks "grunt-contrib-coffee"
     grunt.loadNpmTasks "grunt-contrib-sass"
     grunt.loadNpmTasks "grunt-contrib-copy"
+    grunt.loadNpmTasks "grunt-contrib-requirejs"
     grunt.loadNpmTasks "grunt-contrib-compress"
     grunt.loadNpmTasks "grunt-contrib-connect"
     grunt.loadNpmTasks "grunt-karma"
+    grunt.loadNpmTasks "grunt-contrib-clean"
 
     grunt.registerTask "default", [
         "copy:js",
@@ -89,7 +101,9 @@ module.exports = (grunt) ->
         ]
 
     grunt.registerTask "package", [
+        "clean",
         "default",
+        "requirejs:minify",
         "compress:package"
         ]
 
